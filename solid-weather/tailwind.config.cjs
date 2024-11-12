@@ -11,6 +11,16 @@ export default {
         "2xl": "1400px",
       },
     },
+    boxShadow: {
+      sm: "0 0 2px rgb(0 0 0 / 0.05)",
+      DEFAULT: "0 0 3px rgb(0 0 0 / 0.1), 0 0 2px rgb(0 0 0 / 0.1)",
+      md: "0 0 6px rgb(0 0 0 / 0.1), 0 0 4px rgb(0 0 0 / 0.1)",
+      lg: "0 0 15px rgb(0 0 0 / 0.1), 0 0 6px rgb(0 0 0 / 0.1)",
+      xl: "0 0 25px rgb(0 0 0 / 0.1), 0 0 10px rgb(0 0 0 / 0.1)",
+      "2xl": "0 0 50px rgb(0 0 0 / 0.25)",
+      inner: "inset 0 0 4px rgb(0 0 0 / 0.05)",
+      none: "0 0 #0000",
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
