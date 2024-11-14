@@ -52,7 +52,7 @@ export const Search: Component<{ class?: string }> = (props) => {
           hourly:
             "temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_direction_10m",
           daily:
-            "temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max,precipitation_sum,weather_code,wind_speed_10m_max,wind_direction_10m_dominant,uv_index_max",
+            "temperature_2m_min,temperature_2m_max,sunrise,sunset,precipitation_probability_max,precipitation_sum,weather_code,wind_speed_10m_max,wind_direction_10m_dominant,uv_index_max",
         })
       ).at(0);
 
@@ -119,6 +119,9 @@ export const Search: Component<{ class?: string }> = (props) => {
       setStatus("selected");
 
       setLoading(false);
+
+      await new Promise((res) => setTimeout(res, 1000));
+      setLocationInput("");
     }
   }
 

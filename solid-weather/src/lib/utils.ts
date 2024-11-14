@@ -1,6 +1,14 @@
 import { type ClassValue, clsx } from "clsx";
 import { IconTypes } from "solid-icons";
-import { BsCloudSunFill } from "solid-icons/bs";
+import {
+  BsCloudDrizzleFill,
+  BsCloudFogFill,
+  BsCloudLightningRainFill,
+  BsCloudRainFill,
+  BsCloudRainHeavyFill,
+  BsCloudSnowFill,
+  BsCloudSunFill,
+} from "solid-icons/bs";
 import { FaSolidQuestion } from "solid-icons/fa";
 import { TbSunFilled } from "solid-icons/tb";
 import { twMerge } from "tailwind-merge";
@@ -19,6 +27,12 @@ export function weatherCodeToIcon(weatherCode: number | undefined): IconTypes {
 
   if (weatherCode === 0) return TbSunFilled;
   if (weatherCode <= 3) return BsCloudSunFill;
+  if (weatherCode <= 48) return BsCloudFogFill;
+  if (weatherCode <= 55) return BsCloudDrizzleFill;
+  if (weatherCode <= 65) return BsCloudRainFill;
+  if ([71, 73, 75, 77, 85, 86].includes(weatherCode)) return BsCloudSnowFill;
+  if (weatherCode <= 82) return BsCloudRainHeavyFill;
+  if (weatherCode <= 99) return BsCloudLightningRainFill;
 
   return FaSolidQuestion;
 }

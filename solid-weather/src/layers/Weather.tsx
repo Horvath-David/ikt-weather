@@ -1,6 +1,8 @@
+import { BsCloudRainFill } from "solid-icons/bs";
 import { FaSolidLocationArrow } from "solid-icons/fa";
 import { TbWind } from "solid-icons/tb";
 import { Component, createEffect, For, Show } from "solid-js";
+import { useStatus } from "~/lib/statusContext";
 import {
   cn,
   degreesToCompass,
@@ -11,13 +13,21 @@ import { useWeather } from "~/lib/weatherContext";
 
 export const Weather: Component<{ class?: string }> = (props) => {
   const [weather] = useWeather();
+  const [_, setStatus] = useStatus();
 
   createEffect(() => console.log(weather()));
+
+  function toSearch() {
+    setStatus("searching");
+  }
 
   return (
     <div class={cn("absolute inset-0 flex gap-8 p-8", props.class)}>
       <aside class="h-full max-w-64 shrink-0 flex-grow rounded-2xl border border-white/35 bg-white/10 p-4">
-        <div class="flex items-center gap-3 rounded-xl border border-white/35 bg-white/[.075]">
+        <div
+          class="flex cursor-pointer items-center gap-3 rounded-xl border border-white/35 bg-white/[.075] transition-colors hover:border-white/50 hover:bg-white/15"
+          onClick={toSearch}
+        >
           <FaSolidLocationArrow class="ml-3 text-white/35" size={18} />
           <div class="w-full break-all border-none p-0 py-2 pr-3">
             <Show when={weather()?.location} fallback="Click to search">
@@ -30,12 +40,15 @@ export const Weather: Component<{ class?: string }> = (props) => {
           </div>
         </div>
       </aside>
-      <main class="flex h-full flex-1 flex-col justify-end gap-1">
-        <div class="mb-4 flex items-center gap-6">
+      <main class="flex h-full flex-1 flex-col justify-end gap-1 overflow-hidden">
+        <div class="flex w-full flex-1 justify-end">
           {weatherCodeToIcon(weather()?.weather.current.weather_code)({
-            size: 64,
+            size: 256,
+            class: "text-white/35",
           })}
-          <span class="text-5xl font-semibold">
+        </div>
+        <div class="mb-4 flex items-center gap-6">
+          <span class="text-8xl font-semibold">
             {formatTemp(weather()?.weather.current.temperature)}
           </span>
         </div>
@@ -47,11 +60,11 @@ export const Weather: Component<{ class?: string }> = (props) => {
         </span>
         <span class="text-xl leading-none">
           <span class="font-semibold">
-            {formatTemp(weather()?.weather.current.temperature)}{" "}
+            {formatTemp(weather()?.weather.daily.min_temperature?.at(0))}{" "}
           </span>
           low,{" "}
           <span class="font-semibold">
-            {formatTemp(weather()?.weather.current.temperature)}{" "}
+            {formatTemp(weather()?.weather.daily.max_temperature?.at(0))}{" "}
           </span>
           high
         </span>
@@ -68,21 +81,44 @@ export const Weather: Component<{ class?: string }> = (props) => {
           </span>
         </div>
 
-        <div class="mt-8 flex h-48 w-full max-w-full gap-4 overflow-y-hidden overflow-x-scroll">
-          <For each={weather()?.weather.daily.time ?? []}>
-            {(time, i) => (
-              <div class="flex h-full w-32 flex-col items-center gap-4 rounded-xl border border-white/35 bg-white/10 p-2">
-                <span class="text-sm font-semibold">
-                  {time.toLocaleString("en-us", { weekday: "long" })}
-                </span>
-                {weatherCodeToIcon(
-                  weather()?.weather.daily.weather_code?.at(i()),
-                )({
-                  size: 48,
-                })}
-              </div>
-            )}
-          </For>
+        <div class="relative mt-8 h-48 w-full">
+          <div class="absolute inset-0 flex gap-4 overflow-x-auto overflow-y-hidden pb-2">
+            <For each={weather()?.weather.daily.time ?? []}>
+              {(time, i) => (
+                <div class="flex h-full w-32 shrink-0 flex-col items-center gap-4 rounded-xl border border-white/35 bg-white/10 p-2">
+                  <span class="text-sm font-semibold">
+                    {time.toLocaleString("en-us", { weekday: "long" })}
+                  </span>
+                  {weatherCodeToIcon(
+                    weather()?.weather.daily.weather_code?.at(i()),
+                  )({
+                    size: 36,
+                  })}
+                  <div class="flex gap-1 text-sm">
+                    <span class="font-semibold">
+                      {formatTemp(
+                        weather()?.weather.daily.min_temperature?.at(i()),
+                      )}{" "}
+                    </span>
+                    /
+                    <span class="font-semibold">
+                      {formatTemp(
+                        weather()?.weather.daily.max_temperature?.at(i()),
+                      )}
+                    </span>
+                  </div>
+                  <div class="mt-auto flex items-center gap-2 font-semibold">
+                    <BsCloudRainFill size={20} />
+                    {Math.round(
+                      (weather()?.weather.daily.precipitation_chance?.at(i()) ??
+                        0) * 10,
+                    ) / 10}
+                    %
+                  </div>
+                </div>
+              )}
+            </For>
+          </div>
         </div>
       </main>
     </div>

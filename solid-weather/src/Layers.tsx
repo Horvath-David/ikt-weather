@@ -11,14 +11,14 @@ export const Layers: Component<{}> = () => {
     <div class="relative h-screen w-full overflow-hidden">
       <Backdrop />
       <Search
-        class={`transition-opacity ${
+        class={`transition-opacity duration-300 ${
           status() === "searching"
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
         }`}
       />
       <Weather
-        class={`transition-opacity ${
+        class={`transition-opacity duration-300 ${
           status() === "selected"
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
