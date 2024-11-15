@@ -1,5 +1,5 @@
 import { BsCloudRainFill } from "solid-icons/bs";
-import { FaSolidLocationArrow } from "solid-icons/fa";
+import { FaSolidCalendarDay, FaSolidLocationArrow } from "solid-icons/fa";
 import { TbWind } from "solid-icons/tb";
 import { Component, createEffect, For, Show } from "solid-js";
 import { useStatus } from "~/lib/statusContext";
@@ -24,7 +24,7 @@ export const Weather: Component<{ class?: string }> = (props) => {
   return (
     <div class={cn("absolute inset-0", props.class)}>
       <div class="mx-auto flex h-full w-full max-w-screen-2xl gap-8 p-8">
-        <aside class="h-full max-w-64 shrink-0 flex-grow rounded-2xl border border-white/35 bg-white/10 p-4">
+        <aside class="flex h-full max-w-72 shrink-0 flex-grow flex-col gap-4 rounded-2xl border border-white/35 bg-white/10 p-4">
           <div
             class="flex cursor-pointer items-center gap-3 rounded-xl border border-white/35 bg-white/[.075] transition-colors hover:border-white/50 hover:bg-white/15"
             onClick={toSearch}
@@ -40,8 +40,77 @@ export const Weather: Component<{ class?: string }> = (props) => {
               </Show>
             </div>
           </div>
+
+          <div class="relative h-full w-full">
+            <div class="absolute inset-0 -mr-3 flex flex-col gap-4 overflow-y-auto overflow-x-hidden pr-1">
+              <div class="mt-2 flex items-center gap-2 font-semibold">
+                <FaSolidCalendarDay />
+                Today
+              </div>
+              <For each={weather()?.weather.hourly.time ?? []}>
+                {(time, i) => {
+                  const now = new Date();
+                  return (
+                    <Show when={time > now}>
+                      <Show
+                        when={
+                          time.getDate() !== now.getDate() &&
+                          time.getHours() === 0
+                        }
+                      >
+                        <div class="mt-2 flex items-center gap-2 font-semibold">
+                          <FaSolidCalendarDay />
+                          {time.getDate() === now.getDate() + 1 ||
+                          (time.getDate() === 1 && now.getDate() !== 1)
+                            ? "Tomorrow"
+                            : time.toLocaleString("en-us", { weekday: "long" })}
+                        </div>
+                      </Show>
+                      <div
+                        class="grid w-full grid-cols-[2fr,2fr,2fr] items-center gap-2 border-b border-white/35 pb-3 text-sm"
+                        classList={{
+                          "!border-none":
+                            i() ===
+                              (weather()?.weather.hourly?.time?.length ?? 0) -
+                                1 || time.getHours() === 23,
+                        }}
+                      >
+                        <span>
+                          {time.toLocaleString("en-us", { timeStyle: "short" })}
+                        </span>
+                        <div class="flex items-center gap-2">
+                          {weatherCodeToIcon(
+                            weather()?.weather.hourly.weather_code?.at(i()),
+                          )({
+                            size: 16,
+                          })}
+                          <span class="font-semibold">
+                            {formatTemp(
+                              weather()?.weather.hourly.temperature?.at(i()),
+                            )}
+                          </span>
+                        </div>
+                        <div class="ml-auto flex items-center gap-2 font-semibold">
+                          <BsCloudRainFill size={20} />
+                          <span class="min-w-10">
+                            {Math.round(
+                              (weather()?.weather.hourly.precipitation_chance?.at(
+                                i(),
+                              ) ?? 0) * 10,
+                            ) / 10}
+                            %
+                          </span>
+                        </div>
+                      </div>
+                    </Show>
+                  );
+                }}
+              </For>
+            </div>
+          </div>
         </aside>
-        <main class="flex h-full flex-1 flex-col justify-end gap-1 overflow-hidden">
+
+        <main class="flex h-full flex-1 flex-col justify-end gap-1">
           <div class="flex w-full flex-1 justify-end">
             {weatherCodeToIcon(weather()?.weather.current.weather_code)({
               size: 256,
