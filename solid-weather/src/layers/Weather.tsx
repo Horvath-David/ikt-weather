@@ -1,6 +1,7 @@
 import { BsCloudRainFill } from "solid-icons/bs";
 import { FaSolidCalendarDay, FaSolidLocationArrow } from "solid-icons/fa";
 import { TbWind } from "solid-icons/tb";
+import { TiWarning } from "solid-icons/ti";
 import { Component, For, Show } from "solid-js";
 import { useStatus } from "~/lib/statusContext";
 import {
@@ -132,15 +133,34 @@ export const Weather: Component<{ class?: string }> = (props) => {
                 "text-white/35 max-md:text-[10px] max-md:mt-8 max-md:mb-4 max-md:text-white",
             })}
           </div>
-          <div class="mb-4 flex items-center gap-6 max-md:mb-10 max-md:justify-center">
-            <span class="text-8xl font-semibold max-md:text-6xl">
+          <div class="mb-4 flex flex-col justify-center max-md:mb-10 max-md:items-center">
+            <span class="text-8xl font-semibold leading-none max-md:text-6xl">
               {formatTemp(weather()?.weather.current.temperature)}
             </span>
+            <Show when={(weather()?.weather?.current?.temperature ?? 0) < 7}>
+              <div class="flex items-center gap-1.5">
+                <TiWarning size={24} />
+                <span class="text leading-none">Winter tires recommended</span>
+              </div>
+            </Show>
+            <Show when={(weather()?.weather?.current?.uv_index ?? 0) >= 6}>
+              <div class="flex items-center gap-1.5">
+                <TiWarning size={24} />
+                <span class="text leading-none">High UV radiation</span>
+              </div>
+            </Show>
           </div>
           <span class="text-xl leading-none">
             Feels like{" "}
             <span class="font-semibold">
               {formatTemp(weather()?.weather.current.feels_like)}
+            </span>
+          </span>
+          <span class="text-xl leading-none">
+            Humidity:{" "}
+            <span class="font-semibold">
+              {Math.round((weather()?.weather.current.humidity ?? 0) * 10) / 10}
+              %
             </span>
           </span>
           <span class="text-xl leading-none">
@@ -153,6 +173,22 @@ export const Weather: Component<{ class?: string }> = (props) => {
             </span>
             high
           </span>
+          <span class="text-xl leading-none">
+            Sunrise at{" "}
+            <span class="font-semibold">
+              {weather()
+                ?.weather.daily.sunrise?.at(0)
+                ?.toLocaleString("en-us", { timeStyle: "short" })}
+              {", "}
+            </span>
+            Sunset at{" "}
+            <span class="font-semibold">
+              {weather()
+                ?.weather.daily.sunset?.at(0)
+                ?.toLocaleString("en-us", { timeStyle: "short" })}
+            </span>
+          </span>
+
           <div class="mt-4 flex items-center gap-2">
             <TbWind size={28} />
             <span class="text-xl">

@@ -101,8 +101,24 @@ export const Search: Component<{ class?: string }> = (props) => {
             ).map((t) => new Date((t + utcOffsetSeconds) * 1000)),
             min_temperature: daily?.variables(0)?.valuesArray() || undefined,
             max_temperature: daily?.variables(1)?.valuesArray() || undefined,
-            // sunrise: daily?.variables(2) || undefined,
-            // sunset: daily?.variables(3)?.valuesArray() || undefined,
+            sunrise:
+              new Array(daily?.variables(2)?.valuesInt64Length() ?? 0)
+                .fill(0)
+                .map(
+                  (_, i) =>
+                    new Date(
+                      Number(daily?.variables(2)?.valuesInt64(i)) * 1000,
+                    ),
+                ) || undefined,
+            sunset:
+              new Array(daily?.variables(3)?.valuesInt64Length() ?? 0)
+                .fill(0)
+                .map(
+                  (_, i) =>
+                    new Date(
+                      Number(daily?.variables(3)?.valuesInt64(i)) * 1000,
+                    ),
+                ) || undefined,
             precipitation_chance:
               daily?.variables(4)?.valuesArray() || undefined,
             precipitation_amount:

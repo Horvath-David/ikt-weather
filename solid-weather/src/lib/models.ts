@@ -36,8 +36,8 @@ export interface WeatherData {
       time: Date[];
       min_temperature?: Float32Array;
       max_temperature?: Float32Array;
-      //   sunrise?: Float32Array;
-      //   sunset?: Float32Array;
+      sunrise?: Date[];
+      sunset?: Date[];
       precipitation_chance?: Float32Array;
       precipitation_amount?: Float32Array;
       weather_code?: Float32Array;
