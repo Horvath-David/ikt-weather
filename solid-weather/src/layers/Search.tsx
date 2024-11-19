@@ -120,7 +120,7 @@ export const Search: Component<{ class?: string }> = (props) => {
 
       setLoading(false);
 
-      await new Promise((res) => setTimeout(res, 1000));
+      await new Promise((res) => setTimeout(res, 500));
       setLocationInput("");
     }
   }
@@ -129,11 +129,11 @@ export const Search: Component<{ class?: string }> = (props) => {
     <form
       onSubmit={searchLocation}
       class={cn(
-        "absolute inset-0 flex h-screen w-full items-center justify-center",
+        "absolute inset-0 flex h-screen w-full items-center justify-center p-4",
         props.class,
       )}
     >
-      <div class="w-sm ml-2 flex items-center gap-4">
+      <div class="flex w-full items-center md:ml-2 md:max-w-sm">
         <TextField
           value={locationInput()}
           onChange={setLocationInput}
@@ -144,17 +144,20 @@ export const Search: Component<{ class?: string }> = (props) => {
             <TextFieldInput
               type="text"
               autocomplete="off"
+              autofocus={true}
               placeholder="Search for a place..."
               class="min-w-0 max-w-full border-none p-0 py-6 pr-4 text-xl placeholder:text-white/65 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </TextFieldLabel>
         </TextField>
-        <AiOutlineLoading
-          class="h-6 w-0 max-w-6 shrink-0 flex-grow-[.0001] basis-0 animate-spin text-white/65 opacity-0 transition-[flex,_opacity] duration-700 [animation-duration:1s]"
+        <div
+          class="flex h-6 w-0 max-w-10 shrink-0 flex-grow-[.0001] basis-0 justify-end text-white/65 opacity-0 transition-[flex,_opacity] duration-700"
           classList={{
             "flex-grow-[1] !opacity-100": loading(),
           }}
-        />
+        >
+          <AiOutlineLoading class="h-6 w-6 animate-spin duration-1000" />
+        </div>
       </div>
     </form>
   );

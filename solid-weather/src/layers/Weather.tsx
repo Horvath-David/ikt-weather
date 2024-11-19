@@ -1,7 +1,7 @@
 import { BsCloudRainFill } from "solid-icons/bs";
 import { FaSolidCalendarDay, FaSolidLocationArrow } from "solid-icons/fa";
 import { TbWind } from "solid-icons/tb";
-import { Component, createEffect, For, Show } from "solid-js";
+import { Component, For, Show } from "solid-js";
 import { useStatus } from "~/lib/statusContext";
 import {
   cn,
@@ -15,18 +15,16 @@ export const Weather: Component<{ class?: string }> = (props) => {
   const [weather] = useWeather();
   const [_, setStatus] = useStatus();
 
-  createEffect(() => console.log(weather()));
-
   function toSearch() {
     setStatus("searching");
   }
 
   return (
     <div class={cn("absolute inset-0", props.class)}>
-      <div class="mx-auto flex h-full w-full max-w-screen-2xl gap-8 p-8">
-        <aside class="flex h-full max-w-72 shrink-0 flex-grow flex-col gap-4 rounded-2xl border border-white/35 bg-white/10 p-4">
+      <div class="mx-auto flex h-full w-full max-w-screen-2xl gap-8 p-8 max-md:flex-col-reverse max-md:overflow-y-auto max-md:overflow-x-hidden max-md:p-4 max-md:pr-1">
+        <aside class="flex shrink-0 flex-col gap-4 border border-white/35 bg-white/10 p-4 max-md:contents max-md:h-fit md:h-full md:max-w-72 md:flex-grow md:rounded-2xl">
           <div
-            class="flex cursor-pointer items-center gap-3 rounded-xl border border-white/35 bg-white/[.075] transition-colors hover:border-white/50 hover:bg-white/15"
+            class="flex cursor-pointer items-center gap-3 rounded-xl border border-white/35 bg-white/[.075] transition-colors hover:border-white/50 hover:bg-white/15 max-md:hidden"
             onClick={toSearch}
           >
             <FaSolidLocationArrow class="ml-3 text-white/35" size={18} />
@@ -41,8 +39,8 @@ export const Weather: Component<{ class?: string }> = (props) => {
             </div>
           </div>
 
-          <div class="relative h-full w-full">
-            <div class="absolute inset-0 -mr-3 flex flex-col gap-4 overflow-y-auto overflow-x-hidden pr-1">
+          <div class="relative h-full w-full max-md:contents">
+            <div class="-mr-3 flex flex-col gap-4 pr-1 md:absolute md:inset-0 md:overflow-y-auto md:overflow-x-hidden">
               <div class="mt-2 flex items-center gap-2 font-semibold">
                 <FaSolidCalendarDay />
                 Today
@@ -67,7 +65,7 @@ export const Weather: Component<{ class?: string }> = (props) => {
                         </div>
                       </Show>
                       <div
-                        class="grid w-full grid-cols-[2fr,2fr,2fr] items-center gap-2 border-b border-white/35 pb-3 text-sm"
+                        class="grid w-full grid-cols-[2fr,2fr,2fr] items-center gap-2 border-b border-white/35 pb-3 md:text-sm"
                         classList={{
                           "!border-none":
                             i() ===
@@ -111,14 +109,31 @@ export const Weather: Component<{ class?: string }> = (props) => {
         </aside>
 
         <main class="flex h-full flex-1 flex-col justify-end gap-1">
-          <div class="flex w-full flex-1 justify-end">
+          <div
+            class="flex cursor-pointer items-center gap-3 rounded-xl border border-white/35 bg-white/[.075] transition-colors hover:border-white/50 hover:bg-white/15 md:hidden"
+            onClick={toSearch}
+          >
+            <FaSolidLocationArrow class="ml-3 text-white/35" size={18} />
+            <div class="w-full break-all border-none p-0 py-2 pr-3">
+              <Show when={weather()?.location} fallback="Click to search">
+                <span class="line-clamp-1">
+                  {weather()?.location.name}
+                  {weather()?.location.country &&
+                    ", " + weather()?.location.country}
+                </span>
+              </Show>
+            </div>
+          </div>
+
+          <div class="flex w-full flex-1 justify-end max-md:justify-center">
             {weatherCodeToIcon(weather()?.weather.current.weather_code)({
-              size: 256,
-              class: "text-white/35",
+              size: "16em",
+              class:
+                "text-white/35 max-md:text-[10px] max-md:mt-8 max-md:mb-4 max-md:text-white",
             })}
           </div>
-          <div class="mb-4 flex items-center gap-6">
-            <span class="text-8xl font-semibold">
+          <div class="mb-4 flex items-center gap-6 max-md:mb-10 max-md:justify-center">
+            <span class="text-8xl font-semibold max-md:text-6xl">
               {formatTemp(weather()?.weather.current.temperature)}
             </span>
           </div>
@@ -150,7 +165,7 @@ export const Weather: Component<{ class?: string }> = (props) => {
             </span>
           </div>
           <div class="relative mt-8 h-48 w-full">
-            <div class="absolute inset-0 flex gap-4 overflow-x-auto overflow-y-hidden pb-2">
+            <div class="absolute inset-0 flex gap-4 overflow-x-auto overflow-y-hidden pb-2 max-md:gap-2">
               <For each={weather()?.weather.daily.time ?? []}>
                 {(time, i) => (
                   <div
