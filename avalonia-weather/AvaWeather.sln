@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaWeather", "AvaWeather.csproj", "{129CF3DF-5D0D-4A46-81EF-C588D59A1949}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{129CF3DF-5D0D-4A46-81EF-C588D59A1949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{129CF3DF-5D0D-4A46-81EF-C588D59A1949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{129CF3DF-5D0D-4A46-81EF-C588D59A1949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{129CF3DF-5D0D-4A46-81EF-C588D59A1949}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
